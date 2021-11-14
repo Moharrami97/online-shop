@@ -24,9 +24,13 @@ class User:
 
 class Customer(User):
 
-    def __init__(self, name, fullname, password, email, wallet_amount):
+    def __init__(self, name, fullname, password, email, wallet_amount, Address=None):
         self.wallet_amount = wallet_amount
+        self.Address = Address
         super().__init__(name, fullname, password, email)
+
+    def __str__(self):
+        return f"name: {self.name} \t geo_location: {self.Address.geo_location}"
 
 
 class Reseller(User):
@@ -54,7 +58,14 @@ class Product:
     def is_free(self):
         return self.price == 0
 
+
 class Reseller(User):
     def __init__(self, name, fullname, password, email):
         super().__init__(name, fullname, password, email)
 
+
+class Address:
+    def __init__(self, geo_location, name, complete_address):
+        self.geo_location = geo_location
+        self.name = name
+        self.complete_address = complete_address
