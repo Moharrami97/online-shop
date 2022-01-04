@@ -1,3 +1,7 @@
+COUNTRY_LIST = ["iran", "turkey"]
+VAT = {"iran": 9, "turkey": 15}
+
+
 class User:
 
     def __init__(self, name, fullname, password, email):
@@ -22,9 +26,16 @@ class User:
         return self.password == password
 
 
+class Address:
+    def __init__(self, geo_location, name, country):
+        self.geo_location = geo_location
+        self.name = name
+        self.country = country
+
+
 class Customer(User):
 
-    def __init__(self, name, fullname, password, email, wallet_amount, Address=None):
+    def __init__(self, name, fullname, password, email, wallet_amount, Address):
         self.wallet_amount = wallet_amount
         self.Address = Address
         super().__init__(name, fullname, password, email)
@@ -42,15 +53,12 @@ class Reseller(User):
 
 
 class Product:
-    product_list = list()
-
     def __init__(self, name, upc, price=0, description="", Reseller=None):
         self.name = name
         self.upc = upc
         self.price = price
         self.description = description
         self.Reseller = Reseller
-        Product.product_list.append(self)
 
     def __str__(self):
         return f"upc: {self.upc} \t name: {self.name} \t Reseller: {self.Reseller.name}"
@@ -59,13 +67,19 @@ class Product:
         return self.price == 0
 
 
-class Reseller(User):
-    def __init__(self, name, fullname, password, email):
-        super().__init__(name, fullname, password, email)
+class Purchase:
+    def __init__(self, user, address):
+        self.user = user
+        self.address = address
+        self.product_list = []
 
+    def add_product(self, products_list):
+        if not isinstance(products_list, list):
+            products_list = [products_list]
+        self.product_list.extend(products_list)
 
-class Address:
-    def __init__(self, geo_location, name, complete_address):
-        self.geo_location = geo_location
-        self.name = name
-        self.complete_address = complete_address
+    def total_price(self):
+        s = 0
+        for product in self.product_list:
+            s += product.price
+        return s
