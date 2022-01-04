@@ -83,3 +83,20 @@ class Purchase:
         for product in self.product_list:
             s += product.price
         return s
+
+
+def calculate_vat(func):
+    def wrapper(pur):
+        vat = VAT[pur.address.country]
+        total_price = pur.total_price()
+        return total_price + total_price * vat / 100
+    return wrapper
+
+
+def show_total_price(p):
+    return p.total_price()
+
+
+@calculate_vat
+def show_vat_pluse_price(p):
+    return p.total_price()
