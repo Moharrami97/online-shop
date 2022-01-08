@@ -67,6 +67,14 @@ class Product:
         return self.price == 0
 
 
+def checkout_permission(func):
+    def wrapper(obj, user):
+        if obj.user == user:
+            return func(obj)
+        return f"you are not allow checkout"
+    return wrapper
+
+
 class Purchase:
     def __init__(self, user, address):
         self.user = user
@@ -84,12 +92,17 @@ class Purchase:
             s += product.price
         return s
 
+    @checkout_permission
+    def checkout(self):
+        return "checkout done"
+
 
 def calculate_vat(func):
     def wrapper(pur):
         vat = VAT[pur.address.country]
         total_price = pur.total_price()
         return total_price + total_price * vat / 100
+
     return wrapper
 
 
