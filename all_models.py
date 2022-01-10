@@ -1,3 +1,6 @@
+from notification import EmailNotification, SmsNotification
+from decorator import notify_observed
+
 COUNTRY_LIST = ["iran", "turkey"]
 VAT = {"iran": 9, "turkey": 15}
 
@@ -72,14 +75,18 @@ def checkout_permission(func):
         if obj.user == user:
             return func(obj)
         return f"you are not allow checkout"
+
     return wrapper
 
 
 class Purchase:
+    observers = [EmailNotification, SmsNotification]
+
     def __init__(self, user, address):
         self.user = user
         self.address = address
         self.product_list = []
+        self.product = self.product_list
 
     def add_product(self, products_list):
         if not isinstance(products_list, list):
@@ -93,6 +100,7 @@ class Purchase:
         return s
 
     @checkout_permission
+    @notify_observed(message="purchase paid")
     def checkout(self):
         return "checkout done"
 

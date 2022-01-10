@@ -26,4 +26,5 @@ print(show_total_price(purchase_iran))
 print(show_vat_pluse_price(purchase_iran))
 
 print(purchase_iran.checkout(c1))
-print(purchase_iran.checkout(c2))
+
+# print(purchase_iran.checkout(c2))
